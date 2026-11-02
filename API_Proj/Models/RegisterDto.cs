@@ -5,7 +5,7 @@ namespace API_proj.Models
     public class RegisterDto
     {
         [Required, StringLength(50)]  
-        public string UserName { get; set; } = string.Empty;
+        public string UserName { get; set; }  = string.Empty;
 
         [Required, StringLength(50)]
         public string UserSurname { get; set; } = string.Empty;
