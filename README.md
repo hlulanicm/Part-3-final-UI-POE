@@ -1,1 +1,1 @@
-This s=is Part 2 of the POE where the Code will connect with the Database and ALL the API endpoints listed in the API Endpoint Plan the HTTPS methods will be executed namely GET, POST , PUT AND DELETE
+This is the Part the where we will work with the MVC and create a suitable UI for the user
