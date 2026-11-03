@@ -13,4 +13,8 @@ namespace RaceDay.Web.Services
 
        public bool IsLoggedIn => Session.GetString("ApiCookie") != null;
 
-        
+        public string? Role => Session.GetString("Role");
+
+            public string? UserName => Session.GetString("UserName");
+
+          
