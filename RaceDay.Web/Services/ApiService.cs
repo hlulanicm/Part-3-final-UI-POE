@@ -17,4 +17,13 @@ namespace RaceDay.Web.Services
 
             public string? UserName => Session.GetString("UserName");
 
-          
+
+        private HttpRequestMessage Build(HttpMethod method, string url, object? body = null)
+        {
+            var req = new HttpRequestMessage(method, url);
+            var cookie = Session.GetString("ApiCookie");
+
+            if (cookie != null) req.Headers.Add("Cookie", cookie);
+             if (body != null) req.Content = JsonContent.Create(body);
+            return req;
+        }
