@@ -52,16 +52,13 @@ namespace RaceDay.Web.Services
         }
 
 
-
-
-
-
         public async Task<HttpResponseMessage> RegisterAsync(object dto) =>
                await _http.PostAsJsonAsync("api/Auth/register", dto);
 
 
         public async Task LogoutAsync()
         {
+
             await _http.SendAsync(Build(HttpMethod.Post, "api/Auth/logout"));
             Session.Clear();
 
