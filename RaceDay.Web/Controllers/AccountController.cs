@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RaceDay.Web.Services;
 
-namespace RaceDay.Web.Controllers
-{
+
     public class AccountController : Controller
     {
         private readonly ApiService _api;
@@ -24,4 +23,23 @@ namespace RaceDay.Web.Controllers
             return RedirectToAction("Index", "Events");
         }
 
+
+
+
+        [HttpGet] public IActionResult Register() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterVm vm)
+        {
+            if (!ModelState.IsValid) return View(vm);
+            var res = await _api.RegisterAsync(vm);
+            if (!res.IsSuccessStatusCode) { ModelState.AddModelError("", await res.Content.ReadAsStringAsync()); return View(vm); }
+            return RedirectToAction("Login");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout() { await _api.LogoutAsync(); return RedirectToAction("Login"); }
     }
+
+
+
