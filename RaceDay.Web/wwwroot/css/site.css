@@ -1,22 +1,373 @@
+/* RaceDay theme: energetic orange and navy */
+:root {
+    --rd-orange: orangered;
+    --rd-orange-dark: orangered;
+    --rd-navy: midnightblue;
+    --rd-navy-light: darkslategray;
+    --rd-yellow: gold;
+    --rd-light: whitesmoke;
+    --bs-primary: orangered;
+    --bs-primary-rgb: 255, 69, 0;
+    --bs-link-color: orangered;
+    --bs-link-hover-color: orangered;
+    --bs-body-font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --bs-font-sans-serif: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 html {
-  font-size: 14px;
+    font-size: 15px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: var(--rd-light);
+    color: black;
+    margin-bottom: 70px;
+}
+
+h1, h2, h3, .rd-heading {
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-style: italic;
+    color: var(--rd-navy);
+}
+
+/* Buttons */
+.btn {
+    font-weight: 600;
+    border-radius: 0.4rem;
+}
+
+.btn-primary {
+    --bs-btn-bg: orangered;
+    --bs-btn-border-color: orangered;
+    --bs-btn-hover-bg: orangered;
+    --bs-btn-hover-border-color: orangered;
+    --bs-btn-active-bg: sienna;
+    --bs-btn-active-border-color: sienna;
+    --bs-btn-disabled-bg: orangered;
+    --bs-btn-disabled-border-color: orangered;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: orangered;
+    --bs-btn-border-color: orangered;
+    --bs-btn-hover-bg: transparent;
+    --bs-btn-hover-border-color: orangered;
+    --bs-btn-hover-color: orangered;
+    --bs-btn-active-bg: orangered;
+    --bs-btn-active-border-color: orangered;
+}
+
+.btn:focus, .btn:active:focus, .form-control:focus, .form-select:focus, .form-check-input:focus {
+    box-shadow: none;
+    outline: 2px solid var(--rd-orange);
+    outline-offset: 1px;
+    border-color: var(--rd-orange);
+}
+
+/* Navigation bar */
+.rd-navbar {
+    background: var(--rd-navy);
+    border-bottom: 4px solid var(--rd-orange);
+}
+
+    .rd-navbar .navbar-brand {
+        color: white;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+        .rd-navbar .navbar-brand span {
+            color: var(--rd-orange);
+        }
+
+    .rd-navbar .nav-link {
+        color: lightsteelblue;
+        font-weight: 600;
+    }
+
+        .rd-navbar .nav-link.active {
+            color: var(--rd-yellow);
+        }
+
+.rd-user {
+    color: lightsteelblue;
+    font-size: 0.9rem;
+}
+
+/* Hero banner on the home page will be a real image with the text on top */
+.rd-hero {
+
+    position: relative;
+    min-height: 420px;
+    border-radius: 0.75rem;
+    overflow: hidden;
+
+    background: var(--rd-navy);
+}
+
+.rd-hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rd-hero-text {
+    position: relative;
+    z-index: 1;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    color: white;
+}
+
+.rd-hero-panel {
+    background: midnightblue;
+    padding: 2rem 2.5rem;
+    border-radius: 0.75rem;
+}
+
+.rd-hero h1 {
+    color: white;
+    font-size: 2.6rem;
+}
+
+.rd-hero p {
+
+    color: white;
+
+    font-size: 1.1rem;
+}
+
+/* Page titles */
+.rd-title {
+    padding-bottom: 0.4rem;
+
+    border-bottom: 3px solid var(--rd-orange);
+    display: inline-block;
+    margin-bottom: 1.25rem;
+}
+
+/* Cards */
+.rd-card {
+    background: white;
+
+    border-radius: 0.75rem;
+    border: 1px solid gainsboro;
+}
+
+    .rd-card .card-title {
+        color: var(--rd-navy);
+        font-weight: 700;
+    }
+
+.rd-banner {
+    height: 160px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.75rem 0.75rem 0 0;
+    background: var(--rd-navy);
+}
+
+.rd-banner-lg {
+    max-height: 320px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.75rem;
+}
+
+/* Statistic tiles on the dashboard */
+.rd-stat {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid gainsboro;
+    border-top: 4px solid var(--rd-orange);
+    padding: 1.25rem;
+}
+
+    .rd-stat .value {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--rd-navy);
+    }
+
+    .rd-stat .label {
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        color: slategray;
+    }
+
+/* Tables */
+.rd-table thead th {
+    background: var(--rd-navy);
+    color: white;
+    font-weight: 600;
+    border: 0;
+}
+
+/* Enrolment status colours */
+.status-badge {
+    display: inline-block;
+    padding: 0.3em 0.75em;
+    border-radius: 50rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.status-confirmed {
+    background: green;
+    color: white;
+}
+
+.status-pending {
+    background: gold;
+    color: black;
+}
+
+.status-cancelled {
+    background: crimson;
+    color: white;
+}
+
+/* Event type tag */
+.rd-tag {
+    background: var(--rd-navy);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25em 0.7em;
+    border-radius: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Profile picture */
+.rd-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--rd-orange);
+}
+
+.rd-avatar-empty {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--rd-navy);
+    color: white;
+    font-size: 3rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid var(--rd-orange);
+}
+
+/* Footer */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    line-height: 50px;
+    background: var(--rd-navy);
+    color: lightsteelblue !important;
+}
+
+/* No icons: Bootstrap draws these with SVG data images, so they are replaced with plain text or the browser defaults */
+.rd-menu-text {
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+}
+
+.navbar-dark .navbar-toggler {
+    border-color: lightsteelblue;
+}
+
+.rd-close {
+    background: none;
+    border: 0;
+    color: inherit;
+    text-decoration: underline;
+    font-size: 0.85rem;
+    padding: 0 0 0 1rem;
+}
+
+.form-select {
+    background-image: none;
+    appearance: auto;
+}
+
+.form-check-input {
+    background-image: none;
+    appearance: auto;
+}
+
+    .form-check-input:checked {
+        background-image: none;
+    }
+
+.form-control.is-invalid, .form-select.is-invalid,
+.form-control.is-valid, .form-select.is-valid,
+.was-validated .form-control:invalid, .was-validated .form-control:valid,
+.was-validated .form-select:invalid, .was-validated .form-select:valid {
+    background-image: none;
+    padding-right: 0.75rem;
+}
+
+.form-select.is-invalid,
+.form-select.is-valid 
+{
+    appearance: auto;
+}
+
+/* Keep the page minmal no shadows and no hover or transition effects */
+*, *::before,
+*::after
+{
+    box-shadow: none !important;
+    transition: none !important;
+}
+
+.card:hover, .rd-card:hover, .rd-stat:hover, .btn:hover {
+    transform: none;
+}
+
+/* Apple system font (San Francisco) on every element */
+*, *::before, *::after,
+body, h1, h2, h3, h4, h5, h6, p, a, span, div, label, li, td, th, small, strong,
+.btn,
+.form-control,
+.form-select,
+.form-label,
+.navbar,
+.nav-link, 
+.card, .table, 
+.alert,
+.rd-tag, 
+.status-badge, 
+.rd-user, 
+.rd-menu-text, 
+input, select, textarea, button, code, pre {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
