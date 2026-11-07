@@ -1,4 +1,4 @@
-﻿]@model HomeVm
+﻿@model HomeVm
 @inject ApiService Api
 @{
     ViewData["Title"] = "Home";
@@ -12,8 +12,10 @@
     <div class="rd-hero-text text-center">
         <h1 class="rd-heading">Your next race starts here</h1>
         <p class="mb-4">Find upcoming events, enrol in the category that suits you and follow your results.</p>
-        <a class="btn btn-primary btn-lg me-2" asp-controller="Account" asp-action="Register">Create an account</a>
-        <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Login">Log in</a>
+        <div class="rd-hero-buttons">
+            <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Register">Create an account</a>
+            <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Login">Log in</a>
+        </div>
     </div>
 </div>
 

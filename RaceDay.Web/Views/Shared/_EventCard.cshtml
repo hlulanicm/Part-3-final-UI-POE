@@ -1,0 +1,23 @@
+@model EventItem
+
+<div class="card rd-card h-100">
+    @if (!string.IsNullOrEmpty(Model.BannerUrl))
+    {
+        <img src="@Model.BannerUrl" class="card-img-top rd-banner" alt="@Model.Name banner" />
+    }
+    else
+    {
+        <img src="~/images/E1.jpg" class="card-img-top rd-banner" alt="RaceDay event" />
+    }
+    <div class="card-body d-flex flex-column">
+        <div class="mb-2"><span class="rd-tag">@Model.EventType</span></div>
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="mb-1"><strong>@Fmt.Date(Model.EventDate)</strong></p>
+        <p class="text-muted mb-1">@Model.Location</p>
+        @if (Model.Distance.HasValue)
+        {
+            <p class="text-muted mb-3">@Model.Distance.Value.ToString("0.##") km</p>
+        }
+        <a class="btn btn-primary mt-auto" asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventID">View event</a>
+    </div>
+</div>

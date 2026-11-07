@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
 using System.Diagnostics;
 using System.Net.Sockets;
 using RaceDay.Web.Services;
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 // MVC with automatic anti-forgery checks on every POST
 builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+
+builder.Services.Configure<RazorViewEngineOptions>(options =>
+    options.ViewLocationFormats.Add("/Views/Accounts/{0}.cshtml"));
 
 // Session keeps the user's login state and role between pages
 builder.Services.AddDistributedMemoryCache();

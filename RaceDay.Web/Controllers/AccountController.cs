@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RaceDay.Web.Services;
+using RaceDay.Web.ViewModels;
 
 
     public class AccountController : Controller
@@ -20,7 +21,7 @@ using RaceDay.Web.Services;
             if (!ModelState.IsValid) return View(vm);
             var (ok, error) = await  _api.LoginAsync(vm.Email, vm.Password);
             if (!ok) { ModelState.AddModelError("", error); return View(vm); }
-            return RedirectToAction("Index", "Events");
+            return RedirectToAction("Index", "Home");
         }
 
 
@@ -33,12 +34,14 @@ using RaceDay.Web.Services;
         {
             if (!ModelState.IsValid) return View(vm);
             var res = await _api.RegisterAsync(vm);
-            if (!res.IsSuccessStatusCode) { ModelState.AddModelError("", await res.Content.ReadAsStringAsync()); return View(vm); }
+            if (!res.Ok) { ModelState.AddModelError("", res.Error); return View(vm); }
             return RedirectToAction("Login");
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout() { await _api.LogoutAsync(); return RedirectToAction("Login"); }
+
+        [HttpGet] public IActionResult Denied() => View();
     }
 
 
