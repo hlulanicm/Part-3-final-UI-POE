@@ -296,3 +296,75 @@ namespace RaceDay.Web.Controllers
         }
 
 
+
+        // Helpers 
+
+        // Only the fields the API needs are sent
+        private static object ToBody(EventVm vm) => new
+        {
+            vm.Name,
+            vm.Description,
+            vm.EventDate,
+            vm.Location,
+            vm.Distance,
+            vm.EventType,
+            vm.TargetAudience
+        };
+
+        // Checks the chosen banner is an image before it is sent to the API
+        private void ValidateBanner(EventVm vm)
+        {
+            if (vm.Banner == null || vm.Banner.Length == 0) return;
+
+            if (!vm.Banner.ContentType.StartsWith("image/"))
+                ModelState.AddModelError(nameof(vm.Banner), "The banner must be an image file.");//if file is not an image png/jpeg/webp
+            else if (vm.Banner.Length > 5 * 1024 * 1024)
+                ModelState.AddModelError(nameof(vm.Banner), "The banner must be 5 MB or smaller.");//if image is too big 
+        }
+
+        // Loads an event only if it belongs to the logged-in Organiser
+        private async Task<EventItem?> LoadOwnedEvent(int eventId)
+        {
+            var res = await _api.GetAsync<EventItem>($"api/events/{eventId}");
+            if (!res.Ok || res.Data == null)
+            {
+                TempData["Error"] = res.Error;
+                return null;
+            }
+
+     if (res.Data.OrganiserID != _api.UserId)
+
+            {
+                TempData["Error"] = "You can only manage events that you created.";//if the user tries to change an event that does not belong to them (ID does not match)
+                return null;
+            }
+
+          return res.Data;
+       }
+
+        private async Task<CategoriesVm?> BuildCategoriesVm(int eventId, CategoryVm form)
+        {
+           var ev = await LoadOwnedEvent(eventId); //Load all events the user owns 
+
+       if (ev == null) return null;
+
+            var cats = await _api.GetListAsync<CategoryItem>($"api/events/{eventId}/categories");
+
+     if (!cats.Ok) TempData["Error"] = cats.Error;
+
+        return new CategoriesVm { Event = ev, Categories = cats.Data ?? new(), Form = form };
+        }
+
+        private async Task<EventEnrolmentsVm?> BuildEnrolmentsVm(int eventId)
+        {
+       var ev = await LoadOwnedEvent(eventId);
+      if (ev == null) return null;
+
+            var list = await _api.GetListAsync<EventEnrollmentItem>($"api/events/{eventId}/enrollments");
+            if (!list.Ok) TempData["Error"] = list.Error;
+
+            return new EventEnrolmentsVm { Event = ev, Enrolments = list.Data ?? new() };
+        }
+    }
+}
+
