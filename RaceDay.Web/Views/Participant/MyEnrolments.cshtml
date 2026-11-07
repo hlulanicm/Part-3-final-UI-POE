@@ -1,0 +1,46 @@
+@model List<MyEnrollmentItem>
+    @{
+    ViewData["Title"] = "My Events";
+    }
+
+    <h2 class="rd-title">My events</h2>
+
+    @if (Model.Count == 0)
+{
+    <div class="card rd-card p-4 text-center">
+        <p class="text-muted mb-3">You have not entered any events yet.</p>
+        <div><a class="btn btn-primary" asp-controller="Home" asp-action="Index">Find an event</a></div>
+    </div>
+}
+else
+{
+    <div class="card rd-card">
+        <div class="table-responsive">
+            <table class="table rd-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Category</th>
+                        <th>Enrolled on</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in Model)
+                    {
+                    <tr>
+                        <td><a asp-controller="Events" asp-action="Details" asp-route-id="@e.EventID">@e.EventName</a></td>
+                        <td>@Fmt.Date(e.EventDate)</td>
+                        <td>@e.Location</td>
+                        <td>@e.CategoryName</td>
+                        <td>@Fmt.Date(e.EnrollmentDate)</td>
+                        <td><partial name="_StatusBadge" model="e.Status" /></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
