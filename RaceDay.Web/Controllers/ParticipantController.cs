@@ -1,45 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RaceDay.Web.Filters;
 using RaceDay.Web.Services;
+using RaceDay.Web.ViewModels;
 
+namespace RaceDay.Web.Controllers
+{
 
-    public class AccountController : Controller
+    //User logged IN the session
+
+    [SessionAuthorize("Participant")]
+   public class ParticipantController : Controller
     {
-        private readonly ApiService _api;
-        // Connects our API service
+      private readonly ApiService _api;
 
-        public AccountController(ApiService api) => _api = api;
+       public ParticipantController(ApiService api) => _api = api;
 
-        // Shows the login page
-        [HttpGet] public IActionResult Login() => View();
-
-
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginVm vm)
-        // If the form inputs aren't valid, reload the page
+        // All events the Participant has enrolled for and their status
+        [HttpGet]
+        public async Task<IActionResult> MyEnrolments()
         {
-            if (!ModelState.IsValid) return View(vm);
-            var (ok, error) = await  _api.LoginAsync(vm.Email, vm.Password);
-            if (!ok) { ModelState.AddModelError("", error); return View(vm); }
-            return RedirectToAction("Index", "Events");
+            var res = await _api.GetListAsync<MyEnrollmentItem>("api/enrollments/mine"); //take users to their enrolments 
+
+        if (!res.Ok) TempData["Error"] = res.Error;
+            return View(res.Data ?? new List<MyEnrollmentItem>());
         }
 
-
-
-
-        [HttpGet] public IActionResult Register() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterVm vm)
+        // The Participant's race history
+        [HttpGet]
+        public async Task<IActionResult> MyResults()
         {
-            if (!ModelState.IsValid) return View(vm);
-            var res = await _api.RegisterAsync(vm);
-            if (!res.IsSuccessStatusCode) { ModelState.AddModelError("", await res.Content.ReadAsStringAsync()); return View(vm); }
-            return RedirectToAction("Login");
-        }
+          var res = await _api.GetListAsync<MyResultItem>("api/results/mine");
 
-        [HttpPost]
-        public async Task<IActionResult> Logout() { await _api.LogoutAsync(); return RedirectToAction("Login"); }
+            if (!res.Ok) TempData["Error"] = res.Error;
+            return View(res.Data ?? new List<MyResultItem>());
+        }
     }
-
-
-
+}
