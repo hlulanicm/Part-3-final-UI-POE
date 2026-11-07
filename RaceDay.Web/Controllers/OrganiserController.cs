@@ -81,7 +81,7 @@ namespace RaceDay.Web.Controllers
             }
 
 
-           TempData["Success"] = "The event has been created. Add categories so Participants can enrol.";//Show an appropriate error upon sucessful participant enrolment
+          TempData["Success"] = "The event has been created. Add categories so Participants can enrol.";//Show an appropriate error upon sucessful participant enrolment
             return RedirectToAction("Categories", new { eventId = created.Data.EventID });
         }
 
@@ -211,7 +211,7 @@ namespace RaceDay.Web.Controllers
               });
 
 
-            if (res.Ok) TempData["Success"] = "The category has been added.";//display a sucess messages upon successful updated
+           if (res.Ok) TempData["Success"] = "The category has been added.";//display a sucess messages upon successful updated
             else TempData["Error"] = res.Error;//else display an appropriate error message
 
            return RedirectToAction("Categories", new { eventId });//Redirect to the error page 
@@ -223,11 +223,34 @@ namespace RaceDay.Web.Controllers
         //Delete the event using the event ID and category ID
         public async Task<IActionResult> DeleteCategory(int eventId, int categoryId)
         {
-            var res = await _api.DeleteAsync($"api/categories/{categoryId}");
+         var res = await _api.DeleteAsync($"api/categories/{categoryId}");
 
-            if (res.Ok) TempData["Success"] = "The category has been deleted.";//Display an appropriate message 
+         if (res.Ok) TempData["Success"] = "The category has been deleted.";//Display an appropriate message 
 
             else TempData["Error"] = res.Error;
 
             return RedirectToAction("Categories", new { eventId });
+        }
+
+        //display the event from the azure Blob storage 
+      [HttpGet]
+       public async Task<IActionResult> Enrolments(int eventId)
+        {
+          var vm = await BuildEnrolmentsVm(eventId);
+
+            if (vm == null) return RedirectToAction("Events");
+
+            return View(vm);
+
+        }
+        //Set the Enrollments
+        [HttpPost]
+        public async Task<IActionResult> SetStatus(int eventId, int enrollmentId, string status)
+        {
+         var res = await _api.PutAsync($"api/enrollments/{enrollmentId}/status", new { status }); //Set the enrollment
+
+          if (res.Ok) TempData["Success"] = $"The enrolment is now {status}."; //display an appropiate error 
+            else TempData["Error"] = res.Error;
+
+            return RedirectToAction("Enrolments", new { eventId });
         }
