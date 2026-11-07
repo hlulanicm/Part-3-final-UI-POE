@@ -31,4 +31,20 @@ namespace RaceDay.Web.Controllers
             return View(new DashboardVm { Events = res.Data ?? new() });
         }
 
-       
+
+        // Events 
+
+      [HttpGet]
+     public async Task<IActionResult> Events() //Get all the events for the organiser 
+
+        {
+            var res = await _api.GetListAsync<OrganiserEventItem>("api/events/mine");//redirect them to their events
+
+        if (!res.Ok) TempData["Error"] = res.Error;
+            return View(res.Data ?? new List<OrganiserEventItem>());
+        }
+
+        [HttpGet]
+        public IActionResult CreateEvent() => View("EventForm", new EventVm { EventDate = DateTime.Today.AddDays(30) });
+        //Post changes 
+        [HttpPost]
