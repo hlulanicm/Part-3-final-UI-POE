@@ -170,3 +170,64 @@ namespace RaceDay.Web.Controllers
 
             return RedirectToAction("Events");//redirect to the events page
         }
+
+
+
+        //  Categories 
+
+       [HttpGet] //display categories
+
+      public async Task<IActionResult> Categories(int eventId)
+        {
+         var vm = await BuildCategoriesVm(eventId, new CategoryVm());
+
+            if (vm == null) return RedirectToAction("Events");
+
+            return View(vm);
+        }
+
+        [HttpPost] //Update categories
+
+        public async Task<IActionResult> AddCategory(int eventId, CategoryVm form)
+        {
+            if (!ModelState.IsValid)
+            {
+
+               var invalid = await BuildCategoriesVm(eventId, form);
+                if (invalid == null) return RedirectToAction("Events");
+                return View("Categories", invalid);
+            }
+
+         
+
+            var res = await _api.PostAsync($"api/events/{eventId}/categories", new    // Sends an asynchronous HTTP POST request to a API route where 'eventId' is dynamically inserted into the URL, and stores the response in 'res'.
+            {
+                form.CategoryType,
+                form.Name,
+                form.Description,
+                form.Distance,
+                form.MaxParticipants
+
+              });
+
+
+            if (res.Ok) TempData["Success"] = "The category has been added.";//display a sucess messages upon successful updated
+            else TempData["Error"] = res.Error;//else display an appropriate error message
+
+           return RedirectToAction("Categories", new { eventId });//Redirect to the error page 
+        }
+
+        // Delete the category
+        [HttpPost]
+
+        //Delete the event using the event ID and category ID
+        public async Task<IActionResult> DeleteCategory(int eventId, int categoryId)
+        {
+            var res = await _api.DeleteAsync($"api/categories/{categoryId}");
+
+            if (res.Ok) TempData["Success"] = "The category has been deleted.";//Display an appropriate message 
+
+            else TempData["Error"] = res.Error;
+
+            return RedirectToAction("Categories", new { eventId });
+        }
