@@ -1,0 +1,56 @@
+@model EventEnrolmentsVm
+@{
+    ViewData["Title"] = "Enrolments";
+}
+
+<div class="mb-3"><a asp-action="Events">Back to my events</a></div>
+<h2 class="rd-title">Enrolments for @Model.Event.Name</h2>
+
+@if (Model.Enrolments.Count == 0)
+{
+<div class="card rd-card p-4 text-center text-muted">Nobody has enrolled for this event yet.</div>
+}
+else
+{
+<div class="card rd-card">
+    <div class="table-responsive">
+        <table class="table rd-table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Participant</th>
+                    <th>Email</th>
+                    <th>Category</th>
+                    <th>Enrolled on</th>
+                    <th>Status</th>
+                    <th>Change status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.Enrolments)
+                    {
+                <tr>
+                    <td><strong>@e.ParticipantName</strong></td>
+                    <td>@e.Email</td>
+                    <td>@e.CategoryName</td>
+                    <td>@Fmt.Date(e.EnrollmentDate)</td>
+                    <td><partial name="_StatusBadge" model="e.Status" /></td>
+                    <td>
+                        <form asp-action="SetStatus" method="post" class="d-flex gap-2">
+                            <input type="hidden" name="eventId" value="@Model.Event.EventID" />
+                            <input type="hidden" name="enrollmentId" value="@e.EnrollmentID" />
+                            <select name="status" class="form-select form-select-sm" aria-label="Status">
+                                @foreach (var s in Lookups.Statuses)
+                                        {
+                                <option value="@s" selected="@(s == e.Status)">@s</option>
+                                        }
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                        </form>
+                    </td>
+                </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+</div>
+}

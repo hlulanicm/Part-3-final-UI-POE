@@ -1,0 +1,58 @@
+@model EventEnrolmentsVm
+@{
+    ViewData["Title"] = "Results";
+}
+
+<div class="mb-3"><a asp-action="Events">Back to my events</a></div>
+<h2 class="rd-title">Results for @Model.Event.Name</h2>
+
+@if (Model.Enrolments.Count == 0)
+{
+<div class="card rd-card p-4 text-center text-muted">There are no enrolled Participants to capture results for.</div>
+}
+else
+{
+<p class="text-muted">Enter the finish time as hh:mm:ss. A saved result is shown to the Participant on their My Results page.</p>
+<div class="card rd-card">
+    <div class="table-responsive">
+        <table class="table rd-table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Participant</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Finish time</th>
+                    <th>Position</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.Enrolments)
+                    {
+                <tr>
+                    <td><strong>@e.ParticipantName</strong></td>
+                    <td>@e.CategoryName</td>
+                    <td><partial name="_StatusBadge" model="e.Status" /></td>
+                    @* The inputs belong to the row's form through the form attribute so one result is saved at a time *@
+                    <td>
+                        <input name="finishTime" form="result-@e.EnrollmentID" class="form-control form-control-sm" style="max-width: 120px;"
+                               placeholder="hh:mm:ss" value="@(e.FinishTime.HasValue ? Fmt.Time(e.FinishTime) : "")" />
+                    </td>
+                    <td>
+                        <input name="position" form="result-@e.EnrollmentID" type="number" min="1" class="form-control form-control-sm" style="max-width: 100px;"
+                               value="@e.Position" />
+                    </td>
+                    <td class="text-end">
+                        <form id="result-@e.EnrollmentID" asp-action="SaveResult" method="post">
+                            <input type="hidden" name="eventId" value="@Model.Event.EventID" />
+                            <input type="hidden" name="enrollmentId" value="@e.EnrollmentID" />
+                            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                        </form>
+                    </td>
+                </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+</div>
+}

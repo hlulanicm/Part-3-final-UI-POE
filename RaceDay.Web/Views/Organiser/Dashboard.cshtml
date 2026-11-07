@@ -20,59 +20,59 @@
 
 @if (Model.Events.Count == 0)
 {
-    <div class="card rd-card p-4 text-center">
-        <p class="text-muted mb-3">You have not created any events yet.</p>
-        <div><a class="btn btn-primary" asp-action="CreateEvent">Create your first event</a></div>
-    </div>
+<div class="card rd-card p-4 text-center">
+    <p class="text-muted mb-3">You have not created any events yet.</p>
+    <div><a class="btn btn-primary" asp-action="CreateEvent">Create your first event</a></div>
+</div>
 }
 else
 {
-    <div class="row g-4">
-        <div class="col-lg-7">
-            <h4 class="rd-heading">Enrolments per event</h4>
-            <div class="card rd-card">
-                <div class="table-responsive">
-                    <table class="table rd-table align-middle mb-0">
-                        <thead>
-                            <tr><th>Event</th><th>Date</th><th>Enrolments</th><th></th></tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var e in Model.Events)
+<div class="row g-4">
+    <div class="col-lg-7">
+        <h4 class="rd-heading">Enrolments per event</h4>
+        <div class="card rd-card">
+            <div class="table-responsive">
+                <table class="table rd-table align-middle mb-0">
+                    <thead>
+                        <tr><th>Event</th><th>Date</th><th>Enrolments</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var e in Model.Events)
                             {
-                                <tr>
-                                    <td><strong>@e.Name</strong></td>
-                                    <td>@Fmt.Date(e.EventDate)</td>
-                                    <td>@e.EnrollmentCount</td>
-                                    <td class="text-end">
-                                        <a class="btn btn-outline-primary btn-sm" asp-action="Enrolments" asp-route-eventId="@e.EventID">View</a>
-                                    </td>
-                                </tr>
+                        <tr>
+                            <td><strong>@e.Name</strong></td>
+                            <td>@Fmt.Date(e.EventDate)</td>
+                            <td>@e.EnrollmentCount</td>
+                            <td class="text-end">
+                                <a class="btn btn-outline-primary btn-sm" asp-action="Enrolments" asp-route-eventId="@e.EventID">View</a>
+                            </td>
+                        </tr>
                             }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-5">
-            <h4 class="rd-heading">Upcoming dates</h4>
-            <div class="card rd-card">
-                @if (Model.Upcoming.Count == 0)
-                {
-                    <div class="p-3 text-muted">No upcoming events.</div>
-                }
-                else
-                {
-                    <ul class="list-group list-group-flush">
-                        @foreach (var e in Model.Upcoming)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>@e.Name</span>
-                                <span class="rd-tag">@Fmt.Date(e.EventDate)</span>
-                            </li>
-                        }
-                    </ul>
-                }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+    <div class="col-lg-5">
+        <h4 class="rd-heading">Upcoming dates</h4>
+        <div class="card rd-card">
+            @if (Model.Upcoming.Count == 0)
+                {
+            <div class="p-3 text-muted">No upcoming events.</div>
+                }
+                else
+                {
+            <ul class="list-group list-group-flush">
+                @foreach (var e in Model.Upcoming)
+                        {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>@e.Name</span>
+                    <span class="rd-tag">@Fmt.Date(e.EventDate)</span>
+                </li>
+                        }
+            </ul>
+                }
+        </div>
+    </div>
+</div>
 }
