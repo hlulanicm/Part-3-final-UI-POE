@@ -1,8 +1,81 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿]@model HomeVm
+@inject ApiService Api
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@if (!Api.IsLoggedIn)
+{
+@* Welcome banner for visitors who are not logged in *@
+<div class="rd-hero">
+    <img src="~/images/E1.jpg" class="rd-hero-img" alt="RaceDay" />
+    <div class="rd-hero-text text-center">
+        <h1 class="rd-heading">Your next race starts here</h1>
+        <p class="mb-4">Find upcoming events, enrol in the category that suits you and follow your results.</p>
+        <a class="btn btn-primary btn-lg me-2" asp-controller="Account" asp-action="Register">Create an account</a>
+        <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Login">Log in</a>
+    </div>
 </div>
+
+<div class="row g-4 mt-2 text-center">
+    <div class="col-md-4"><div class="rd-stat"><div class="value">1</div><div class="label">Browse upcoming events</div></div></div>
+    <div class="col-md-4"><div class="rd-stat"><div class="value">2</div><div class="label">Enter an event and pick a category</div></div></div>
+    <div class="col-md-4"><div class="rd-stat"><div class="value">3</div><div class="label">Track your finish times and positions</div></div></div>
+</div>
+}
+else
+{
+<h2 class="rd-title">Upcoming events</h2>
+
+@* Filtering options *@
+<form method="get" asp-controller="Home" asp-action="Index" class="card rd-card p-3 mb-4">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label" for="search">Search</label>
+            <input class="form-control" id="search" name="search" value="@Model.Search" placeholder="Event name" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="eventType">Event type</label>
+            <select class="form-select" id="eventType" name="eventType">
+                <option value="">All types</option>
+                @foreach (var type in Model.EventTypes)
+                    {
+                <option value="@type" selected="@(type == Model.EventType)">@type</option>
+                    }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="location">Location</label>
+            <input class="form-control" id="location" name="location" value="@Model.Location" placeholder="City or venue" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="fromDate">From</label>
+            <input type="date" class="form-control" id="fromDate" name="fromDate" value="@(Model.From?.ToString("yyyy-MM-dd"))" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="toDate">To</label>
+            <input type="date" class="form-control" id="toDate" name="toDate" value="@(Model.To?.ToString("yyyy-MM-dd"))" />
+        </div>
+        <div class="col-md-1 d-grid">
+            <button type="submit" class="btn btn-primary">Go</button>
+        </div>
+    </div>
+    <div class="mt-2"><a asp-action="Index" class="small">Clear filters</a></div>
+</form>
+
+@if (Model.Events.Count == 0)
+    {
+<div class="card rd-card p-4 text-center text-muted">No upcoming events match your search.</div>
+    }
+    else
+    {
+<div class="row g-4">
+    @foreach (var ev in Model.Events)
+            {
+    <div class="col-sm-6 col-lg-4">
+        <partial name="_EventCard" model="ev" />
+    </div>
+            }
+</div>
+    }
+}
