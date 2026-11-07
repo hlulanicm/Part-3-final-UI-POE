@@ -1,0 +1,61 @@
+@model ProfileVm
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h2 class="rd-title">My profile</h2>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card rd-card p-4 text-center">
+            @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+            {
+            <img src="@Model.ProfilePictureUrl" alt="Profile picture" class="rd-avatar mx-auto mb-3" />
+            }
+            else
+            {
+            <div class="rd-avatar-empty mx-auto mb-3">@(Model.UserName.Length > 0 ? Model.UserName[0].ToString().ToUpper() : "?")</div>
+            }
+            <h5 class="mb-0">@Model.UserName @Model.UserSurname</h5>
+            <p class="text-muted mb-0">@Model.Role</p>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card rd-card p-4">
+            <form asp-action="Profile" method="post" enctype="multipart/form-data" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="UserName" class="form-label"></label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="UserSurname" class="form-label"></label>
+                        <input asp-for="UserSurname" class="form-control" />
+                        <span asp-validation-for="UserSurname" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input class="form-control" value="@Model.Email" disabled />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Picture" class="form-label"></label>
+                    <input asp-for="Picture" type="file" class="form-control" accept="image/*" />
+                    <span asp-validation-for="Picture" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
