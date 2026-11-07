@@ -1,0 +1,90 @@
+@model EventDetailsVm
+@inject ApiService Api
+@{
+    ViewData["Title"] = Model.Event.Name;
+    var ev = Model.Event;
+}
+
+<div class="mb-3"><a asp-controller="Home" asp-action="Index">Back to events</a></div>
+
+@if (!string.IsNullOrEmpty(ev.BannerUrl))
+{
+<img src="@ev.BannerUrl" class="rd-banner-lg mb-4" alt="@ev.Name banner" />
+}
+else
+{
+<img src="~/images/event-placeholder.jpg" class="rd-banner-lg mb-4" alt="RaceDay event" />
+}
+
+<div class="card rd-card p-4 mb-4">
+    <div class="mb-2"><span class="rd-tag">@ev.EventType</span></div>
+    <h2>@ev.Name</h2>
+    <div class="row mt-2">
+        <div class="col-md-4"><strong>Date</strong><br />@Fmt.Date(ev.EventDate)</div>
+        <div class="col-md-4"><strong>Location</strong><br />@ev.Location</div>
+        <div class="col-md-4">
+            <strong>Distance</strong><br />
+            @(ev.Distance.HasValue ? ev.Distance.Value.ToString("0.##") + " km" : "-")
+        </div>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(ev.TargetAudience))
+    {
+    <p class="mt-3 mb-0"><strong>Target audience:</strong> @ev.TargetAudience</p>
+    }
+    @if (!string.IsNullOrWhiteSpace(ev.Description))
+    {
+    <p class="mt-3 mb-0">@ev.Description</p>
+    }
+</div>
+
+<h3 class="rd-title">Categories</h3>
+
+@if (Model.Categories.Count == 0)
+{
+<div class="card rd-card p-4 text-center text-muted">This event has no categories yet.</div>
+}
+else
+{
+<div class="card rd-card">
+    <div class="table-responsive">
+        <table class="table rd-table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Distance</th>
+                    <th>Places</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.Categories)
+                    {
+                <tr>
+                    <td><strong>@c.Name</strong></td>
+                    <td>@c.CategoryType</td>
+                    <td>@(c.Distance.HasValue ? c.Distance.Value.ToString("0.##") + " km" : "-")</td>
+                    <td>@c.MaxParticipants</td>
+                    <td>@c.Description</td>
+                    <td class="text-end">
+                        @if (Model.MyStatusByCategory.TryGetValue(c.CategoryID, out var status))
+                                {
+                        <partial name="_StatusBadge" model="status" />
+                                }
+                                else if (Api.IsParticipant)
+                                {
+                        <form asp-action="Enrol" method="post" class="d-inline">
+                            <input type="hidden" name="eventId" value="@ev.EventID" />
+                            <input type="hidden" name="categoryId" value="@c.CategoryID" />
+                            <button type="submit" class="btn btn-primary btn-sm">Enter Event</button>
+                        </form>
+                                }
+                    </td>
+                </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+</div>
+}
