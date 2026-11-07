@@ -217,6 +217,8 @@ namespace RaceDay.Web.Controllers
            return RedirectToAction("Categories", new { eventId });//Redirect to the error page 
         }
 
+        //Enrolments
+
         // Delete the category
         [HttpPost]
 
@@ -252,5 +254,45 @@ namespace RaceDay.Web.Controllers
           if (res.Ok) TempData["Success"] = $"The enrolment is now {status}."; //display an appropiate error 
             else TempData["Error"] = res.Error;
 
-            return RedirectToAction("Enrolments", new { eventId });
+            return RedirectToAction("Enrolments", new { eventId }); //Redirect upon error 
         }
+
+
+        //  Results 
+
+        [HttpGet]
+        public async Task<IActionResult> Results(int eventId)
+        {
+            var vm = await BuildEnrolmentsVm(eventId);
+            if (vm == null) return RedirectToAction("Events");
+
+            // Cancelled enrolments do not take part in the race
+            vm.Enrolments = vm.Enrolments.Where(e => e.Status != "Cancelled").ToList();
+            return View(vm);
+        }
+
+        //Save the results 
+     [HttpPost]
+        public async Task<IActionResult> SaveResult(int eventId, int enrollmentId, int? position, string? finishTime)
+        {
+            // Read the finish time typed as hh:mm:ss
+       TimeSpan? time = null;
+       if (!string.IsNullOrWhiteSpace(finishTime))
+            {
+                if (!TimeSpan.TryParse(finishTime, CultureInfo.InvariantCulture, out var parsed) || parsed <= TimeSpan.Zero)
+                {
+                    TempData["Error"] = "Enter the finish time as hh:mm:ss, for example 01:45:30."; //display a input prompt for the time 
+                    return RedirectToAction("Results", new { eventId });//display the events 
+                }
+                time = parsed;
+            }
+
+            var res = await _api.PutAsync($"api/enrollments/{enrollmentId}/result", new { position, finishTime = time });
+
+            if (res.Ok) TempData["Success"] = "The result has been saved and is now visible to the Participant.";//display an appropriate
+            else TempData["Error"] = res.Error;
+
+            return RedirectToAction("Results", new { eventId });//redirect if failed
+        }
+
+
